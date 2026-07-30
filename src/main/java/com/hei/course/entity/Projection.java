@@ -16,4 +16,6 @@ public class Projection {
     private UUID id;
     private Instant datetime;
     private BigDecimal seatPrice;
+    private Movie movie;
+    private Room room;
 }
