@@ -14,4 +14,6 @@ import java.util.UUID;
 public class Reservation {
 private  UUID id;
 private Instant createdAt;
+private Projection projection;
+private User user;
 }
