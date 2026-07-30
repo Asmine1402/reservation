@@ -1,10 +1,9 @@
 package com.hei.course.entity;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,13 +12,13 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 public class User {
-    private UUID id;
-    private String firstname;
-    private String lastname;
-    private LocalDateTime birthdate;
-    private String email;
-    private String phone;
-    private String password;
-    private UserRole userRole;
-    private List<Reservation> reservationList;
+  private UUID id;
+  private String firstname;
+  private String lastname;
+  private LocalDateTime birthdate;
+  private String email;
+  private String phone;
+  private String password;
+  private UserRole userRole;
+  private List<Reservation> reservationList;
 }

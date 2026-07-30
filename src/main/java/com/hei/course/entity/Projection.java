@@ -1,11 +1,10 @@
 package com.hei.course.entity;
 
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
+import lombok.*;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -13,9 +12,9 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 public class Projection {
-    private UUID id;
-    private Instant datetime;
-    private BigDecimal seatPrice;
-    private Movie movie;
-    private Room room;
+  private UUID id;
+  private Instant datetime;
+  private BigDecimal seatPrice;
+  private Movie movie;
+  private Room room;
 }

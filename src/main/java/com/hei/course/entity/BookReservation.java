@@ -1,8 +1,7 @@
 package com.hei.course.entity;
 
-import lombok.*;
-
 import java.util.UUID;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,7 +10,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 public class BookReservation {
-    private UUID id;
-    private Seat seat;
-    private Reservation reservation;
+  private UUID id;
+  private Seat seat;
+  private Reservation reservation;
 }

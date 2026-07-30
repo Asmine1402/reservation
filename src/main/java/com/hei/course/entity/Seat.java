@@ -1,8 +1,7 @@
 package com.hei.course.entity;
 
-import lombok.*;
-
 import java.util.UUID;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,6 +10,6 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 public class Seat {
-    private UUID id;
-    private String number;
+  private UUID id;
+  private String number;
 }
