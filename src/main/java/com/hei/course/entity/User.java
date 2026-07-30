@@ -3,6 +3,7 @@ package com.hei.course.entity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -20,4 +21,5 @@ public class User {
     private String phone;
     private String password;
     private UserRole userRole;
+    private List<Reservation> reservationList;
 }
