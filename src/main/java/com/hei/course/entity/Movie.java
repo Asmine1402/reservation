@@ -17,4 +17,5 @@ public class Movie {
     private List<Genre> genre;
     private String description;
     private Duration duration;
+    private List<Projection> projectionList;
 }
