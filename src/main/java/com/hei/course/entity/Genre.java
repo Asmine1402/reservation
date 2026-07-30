@@ -1,0 +1,23 @@
+package com.hei.course.entity;
+
+public enum Genre {
+    ACTION,
+    ADVENTURE,
+    COMEDY,
+    DRAMA,
+    FANTASY,
+    HORROR,
+    SCIENCE_FICTION,
+    THRILLER,
+    ROMANCE,
+    DOCUMENTARY,
+    ANIMATION,
+    MUSICAL,
+    WESTERN,
+    WAR,
+    HISTORICAL,
+    CRIME,
+    BIOGRAPHY,
+    FAMILY;
+
+}
