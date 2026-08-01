@@ -1,4 +1,4 @@
-package com.hei.course.entity;
+package com.hei.course.model;
 
 import java.time.LocalDateTime;
 import java.util.List;

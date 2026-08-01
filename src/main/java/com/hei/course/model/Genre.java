@@ -1,4 +1,4 @@
-package com.hei.course.entity;
+package com.hei.course.model;
 
 public enum Genre {
   ACTION,

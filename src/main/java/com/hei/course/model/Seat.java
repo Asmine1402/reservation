@@ -1,4 +1,4 @@
-package com.hei.course.entity;
+package com.hei.course.model;
 
 import java.util.UUID;
 import lombok.*;
@@ -12,4 +12,5 @@ import lombok.*;
 public class Seat {
   private UUID id;
   private String number;
+  private Room room;
 }

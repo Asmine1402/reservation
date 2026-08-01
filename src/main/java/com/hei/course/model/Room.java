@@ -1,4 +1,4 @@
-package com.hei.course.entity;
+package com.hei.course.model;
 
 import java.util.List;
 import java.util.UUID;
