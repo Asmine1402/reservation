@@ -15,6 +15,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,11 +26,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "movies")
@@ -39,28 +38,28 @@ import java.util.UUID;
 @ToString(exclude = "projectionList")
 public class JMovie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @EqualsAndHashCode.Include
+  private UUID id;
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Builder.Default
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "genre", nullable = false)
-    private List<Genre> genre = new ArrayList<>();
+  @Builder.Default
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"))
+  @Enumerated(EnumType.STRING)
+  @Column(name = "genre", nullable = false)
+  private List<Genre> genre = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+  @Column(columnDefinition = "TEXT")
+  private String description;
 
-    @Column(nullable = false)
-    private Duration duration;
+  @Column(nullable = false)
+  private Duration duration;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JProjection> projectionList = new ArrayList<>();
+  @Builder.Default
+  @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<JProjection> projectionList = new ArrayList<>();
 }
