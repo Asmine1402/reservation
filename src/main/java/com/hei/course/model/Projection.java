@@ -1,4 +1,4 @@
-package com.hei.course.entity;
+package com.hei.course.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
