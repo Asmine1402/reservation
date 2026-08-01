@@ -1,0 +1,329 @@
+openapi: 3.0.3
+info:
+  title: Cinema Management API
+  description: Complete specification including pagination, security constraints, and nested object relations.
+  version: 1.2.0
+servers:
+  - url: /api/v1
+
+paths:
+  /movies:
+    put:
+      summary: Update a movie
+      description: |
+        Access Rules:
+        - Returns 403 Forbidden for CLIENTS and EMPLOYEES
+        - Returns 200 OK for MANAGERS
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+      responses:
+        '200':
+          description: Movie updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '403':
+          description: Access denied (CLIENT or EMPLOYEE).
+
+  /reservations:
+    get:
+      summary: Retrieve the list of reservations
+      description: |
+        Access Rules:
+        - Returns 403 Forbidden for CLIENTS
+        - Returns 200 OK for MANAGERS and EMPLOYEES
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: List of reservations retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '403':
+          description: Access denied (CLIENT).
+
+  /reservationById:
+    get:
+      summary: Get a reservation by its identifier
+      description: |
+        Access Rules:
+        - Returns 200 OK if the CLIENT owns the reservation
+        - Returns 403 Forbidden if it is the reservation of another CLIENT
+        - Returns 200 OK for MANAGERS and EMPLOYEES
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Reservation details found with associated user and seat details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '403':
+          description: Access denied (unauthorized CLIENT).
+
+  /reservation:
+    put:
+      summary: Create or update a reservation
+      description: |
+        Access Rules:
+        - Returns 403 Forbidden for CLIENTS
+        - Returns 200 OK for EMPLOYEES and MANAGERS
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationInput'
+      responses:
+        '200':
+          description: Reservation processed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '403':
+          description: Access denied (CLIENT).
+
+  /projection:
+    put:
+      summary: Create or modify a projection
+      description: |
+        Access Rules:
+        - Returns 403 Forbidden for CLIENTS and EMPLOYEES
+        - Returns 200 OK for MANAGERS
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectionInput'
+      responses:
+        '200':
+          description: Projection saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        '403':
+          description: Access denied (CLIENT or EMPLOYEE).
+
+  /projections:
+    get:
+      summary: Retrieve all projections
+      description: |
+        Access Rules:
+        - Returns 200 OK for everyone (Public / All roles).
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: List of available projections including full movie details.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Projection'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      description: Maximum number of elements to return.
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+    OffsetParam:
+      name: offset
+      in: query
+      description: Number of elements to skip for pagination.
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+
+  schemas:
+    Genre:
+      type: string
+      enum:
+        - ACTION
+        - ADVENTURE
+        - COMEDY
+        - DRAMA
+        - FANTASY
+        - HORROR
+        - SCIENCE_FICTION
+        - THRILLER
+        - ROMANCE
+        - DOCUMENTARY
+        - ANIMATION
+        - MUSICAL
+        - WESTERN
+        - WAR
+        - HISTORICAL
+        - CRIME
+        - BIOGRAPHY
+        - FAMILY
+
+    UserRole:
+      type: string
+      enum: [CLIENT, EMPLOYEE, MANAGER]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        rowNumber:
+          type: integer
+        seatNumber:
+          type: integer
+        roomName:
+          type: string
+
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        genre:
+          $ref: '#/components/schemas/Genre'
+        description:
+          type: string
+        duration:
+          type: string
+          description: Duration in ISO-8601 format (e.g., PT2H30M)
+
+    Projection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        datetime:
+          type: string
+          format: date-time
+        seatPrice:
+          type: number
+          format: double
+        movie:
+          $ref: '#/components/schemas/Movie'
+
+    ProjectionInput:
+      type: object
+      required:
+        - datetime
+        - seatPrice
+        - movieId
+      properties:
+        id:
+          type: string
+          format: uuid
+        datetime:
+          type: string
+          format: date-time
+        seatPrice:
+          type: number
+          format: double
+        movieId:
+          type: string
+          format: uuid
+          description: The associated movie ID.
+
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+        projection:
+          $ref: '#/components/schemas/Projection'
+        seats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Seat'
+
+    ReservationInput:
+      type: object
+      required:
+        - userId
+        - projectionId
+        - seatIds
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        projectionId:
+          type: string
+          format: uuid
+        seatIds:
+          type: array
+          items:
+            type: string
+            format: uuid
