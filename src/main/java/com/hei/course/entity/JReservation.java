@@ -34,14 +34,11 @@ public class JReservation {
   @GeneratedValue(strategy = GenerationType.UUID)
   @EqualsAndHashCode.Include
   private UUID id;
-
   @Column(name = "created_at", nullable = false)
   private Instant createdAt;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "projection_id", nullable = false)
   private JProjection projection;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private JUser user;
