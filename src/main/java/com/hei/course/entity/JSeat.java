@@ -23,8 +23,10 @@ public class JSeat {
   @GeneratedValue(strategy = GenerationType.UUID)
   @EqualsAndHashCode.Include
   private UUID id;
+
   @Column(nullable = false)
   private String number;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "room_id", nullable = false)
   private JRoom room;
