@@ -34,14 +34,18 @@ public class JRoom {
   @GeneratedValue(strategy = GenerationType.UUID)
   @EqualsAndHashCode.Include
   private UUID id;
+
   @Column(nullable = false)
   private String number;
+
   @Column(nullable = false)
   private int capacity;
+
   @Builder.Default
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "room_id")
   private List<JSeat> seatList = new ArrayList<>();
+
   @Builder.Default
   @OneToMany(mappedBy = "room")
   private List<JProjection> projectionList = new ArrayList<>();
