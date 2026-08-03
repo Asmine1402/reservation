@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MovieController {
   private final MovieRepository movieRepository;
-
   @PutMapping("/movies")
   public ResponseEntity<Movie> updateMovie(@RequestBody Movie movie) {
     JMovie entity = MovieMapper.toEntity(movie);
