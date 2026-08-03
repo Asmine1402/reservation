@@ -39,6 +39,8 @@ public class SecurityBeansConfig {
                     .hasAnyRole("EMPLOYEE", "MANAGER")
                     .requestMatchers(HttpMethod.GET, "/projection")
                     .permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/movies")
+                    .hasRole("MANAGER")
                     .requestMatchers(HttpMethod.PUT, "/projection")
                     .hasRole("MANAGER")
                     .requestMatchers(HttpMethod.GET, "/reservationById")
