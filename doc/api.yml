@@ -273,6 +273,7 @@ components:
         - datetime
         - seatPrice
         - movieId
+        - roomId
       properties:
         id:
           type: string
@@ -287,6 +288,10 @@ components:
           type: string
           format: uuid
           description: The associated movie ID.
+        roomId:
+          type: string
+          format: uuid
+          description: The room where the projection takes place.
 
     Reservation:
       type: object
