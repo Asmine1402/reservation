@@ -23,8 +23,10 @@ public class SecurityBeansConfig {
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers(HttpMethod.GET, "/ping").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                auth.requestMatchers(HttpMethod.GET, "/ping")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/users")
+                    .permitAll()
                     .requestMatchers(HttpMethod.GET, "/projections")
                     .permitAll()
                     .requestMatchers(HttpMethod.PUT, "/movies")
@@ -33,8 +35,8 @@ public class SecurityBeansConfig {
                     .hasRole("MANAGER")
                     .requestMatchers(HttpMethod.GET, "/reservations")
                     .hasAnyRole("EMPLOYEE", "MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/reservation")
-                        .hasAnyRole( "EMPLOYEE", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/reservation")
+                    .hasAnyRole("EMPLOYEE", "MANAGER")
                     .requestMatchers(HttpMethod.GET, "/reservationById")
                     .authenticated()
                     .anyRequest()
