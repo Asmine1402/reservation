@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class MovieController {
-
-  private final MovieController movieController;
   private final MovieRepository movieRepository;
-
   @PutMapping("/movies")
   public ResponseEntity<Movie> updateMovie(@RequestBody Movie movie) {
     JMovie entity = MovieMapper.toEntity(movie);
