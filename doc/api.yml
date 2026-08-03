@@ -132,8 +132,6 @@ paths:
                 $ref: '#/components/schemas/Projection'
         '403':
           description: Access denied (CLIENT or EMPLOYEE).
-
-  /projections:
     get:
       summary: Retrieve all projections
       description: |
