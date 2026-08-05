@@ -1,0 +1,9 @@
+config:
+  target: "https://ctfdwsiksdjqbsljbon7j757le0nuqth.lambda-url.eu-west-3.on.aws/"
+  phases:
+    - duration: 60
+      arrivalRate: 50
+scenarios:
+  - flow:
+      - get:
+          url: "/projection"
