@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Reservation {
   private UUID id;
   private Instant createdAt;
