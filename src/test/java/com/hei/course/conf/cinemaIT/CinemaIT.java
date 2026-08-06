@@ -1,7 +1,6 @@
 package com.hei.course.conf.cinemaIT;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.hei.course.conf.FacadeIT;
 import com.hei.course.endpoint.rest.dto.ReservationInput;
@@ -248,5 +247,45 @@ public class CinemaIT extends FacadeIT {
             .exchange("/reservation", HttpMethod.PUT, request, String.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
+  void should_save_reservation_when_manager_puts_valid_input() {
+    ReservationInput input = new ReservationInput();
+    input.setUserId(userEntity.getId());
+    input.setProjectionId(projectionEntity.getId());
+
+    HttpEntity<ReservationInput> request = new HttpEntity<>(input);
+
+    ResponseEntity<Reservation> response =
+        testRestTemplate
+            .withBasicAuth(MANAGER_EMAIL, MANAGER_PASSWORD)
+            .exchange("/reservation", HttpMethod.PUT, request, Reservation.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertEquals(userEntity.getId(), response.getBody().getUser().getId());
+    assertEquals(projectionEntity.getId(), response.getBody().getProjection().getId());
+  }
+
+  @Test
+  void should_return_reservation_by_id_when_owner() {
+    // Récupère directement l'id de l'entité JPA (pas de mapping -> pas de lazy loading)
+    UUID reservationId = reservationRepository.findAll().stream().findFirst().orElseThrow().getId();
+
+    ResponseEntity<Reservation> response =
+        testRestTemplate
+            .withBasicAuth(CLIENT_EMAIL, CLIENT_PASSWORD)
+            .exchange("/reservation/" + reservationId, HttpMethod.GET, null, Reservation.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertEquals("Asmine", response.getBody().getUser().getFirstname());
+  }
+
+  @Test
+  void should_return_null_when_entity_or_model_is_null() {
+    assertNull(ReservationMapper.toModel(null));
+    assertNull(ReservationMapper.toEntity(null));
   }
 }
