@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Room {
   private UUID id;
   private String number;

@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Movie {
   private UUID id;
   private String title;

@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Projection {
   private UUID id;
   private Instant datetime;
