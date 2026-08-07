@@ -115,10 +115,20 @@ public class CinemaIT extends FacadeIT {
   }
 
   @Test
-  void should_return_reservation_list() {
-    ResponseEntity<List<Reservation>> response =
+  void should_return_403_when_client_tries_to_list_reservations() {
+    ResponseEntity<String> response =
         testRestTemplate
             .withBasicAuth(CLIENT_EMAIL, CLIENT_PASSWORD)
+            .exchange("/reservation", HttpMethod.GET, null, String.class);
+
+    assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+  }
+
+  @Test
+  void should_return_reservation_list_for_manager() {
+    ResponseEntity<List<Reservation>> response =
+        testRestTemplate
+            .withBasicAuth(MANAGER_EMAIL, MANAGER_PASSWORD)
             .exchange(
                 "/reservation",
                 HttpMethod.GET,
