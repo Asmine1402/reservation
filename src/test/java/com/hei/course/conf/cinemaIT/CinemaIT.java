@@ -298,4 +298,94 @@ public class CinemaIT extends FacadeIT {
     assertNull(ReservationMapper.toModel(null));
     assertNull(ReservationMapper.toEntity(null));
   }
+
+  @Test
+  void should_download_ticket_as_owner() {
+    UUID reservationId = reservationRepository.findAll().stream().findFirst().orElseThrow().getId();
+
+    ResponseEntity<byte[]> response =
+        testRestTemplate
+            .withBasicAuth(CLIENT_EMAIL, CLIENT_PASSWORD)
+            .exchange(
+                "/reservation/" + reservationId + "/ticket", HttpMethod.GET, null, byte[].class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(MediaType.APPLICATION_PDF, response.getHeaders().getContentType());
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().length > 0);
+  }
+
+  @Test
+  void should_download_ticket_as_manager_for_any_reservation() {
+    UUID reservationId = reservationRepository.findAll().stream().findFirst().orElseThrow().getId();
+
+    ResponseEntity<byte[]> response =
+        testRestTemplate
+            .withBasicAuth(MANAGER_EMAIL, MANAGER_PASSWORD)
+            .exchange(
+                "/reservation/" + reservationId + "/ticket", HttpMethod.GET, null, byte[].class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().length > 0);
+  }
+
+  @Test
+  void should_return_403_when_client_downloads_another_user_ticket() {
+    User otherUserModel =
+        new User(
+            UUID.randomUUID(),
+            "Fanja",
+            "Rakoto",
+            LocalDateTime.parse("1998-05-20T10:00:00"),
+            "fanja.ticket@gmail.com",
+            "0987654",
+            passwordEncoder.encode("fanja123"),
+            UserRole.CLIENT,
+            new ArrayList<>());
+    JUser otherUserEntity = userRepository.save(UserMapper.toEntity(otherUserModel));
+
+    JReservation otherResaEntity = new JReservation();
+    otherResaEntity.setId(UUID.randomUUID());
+    otherResaEntity.setCreatedAt(Instant.now());
+    otherResaEntity.setUser(otherUserEntity);
+    otherResaEntity.setProjection(projectionEntity);
+    otherResaEntity = reservationRepository.save(otherResaEntity);
+
+    ResponseEntity<String> response =
+        testRestTemplate
+            .withBasicAuth(CLIENT_EMAIL, CLIENT_PASSWORD)
+            .exchange(
+                "/reservation/" + otherResaEntity.getId() + "/ticket",
+                HttpMethod.GET,
+                null,
+                String.class);
+
+    assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+  }
+
+  @Test
+  void should_return_404_when_ticket_reservation_unknown() {
+    ResponseEntity<String> response =
+        testRestTemplate
+            .withBasicAuth(CLIENT_EMAIL, CLIENT_PASSWORD)
+            .exchange(
+                "/reservation/" + UUID.randomUUID() + "/ticket",
+                HttpMethod.GET,
+                null,
+                String.class);
+
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
+
+  @Test
+  void should_return_401_when_downloading_ticket_without_authentication() {
+    UUID reservationId = reservationRepository.findAll().stream().findFirst().orElseThrow().getId();
+
+    ResponseEntity<String> response =
+        testRestTemplate.exchange(
+            "/reservation/" + reservationId + "/ticket", HttpMethod.GET, null, String.class);
+
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+  }
 }
