@@ -4,9 +4,13 @@ import com.hei.course.endpoint.rest.dto.ReservationInput;
 import com.hei.course.model.Reservation;
 import com.hei.course.security.UserPrincipal;
 import com.hei.course.service.ReservationService;
+import com.hei.course.service.TicketService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ReservationController {
   private final ReservationService service;
+  private final TicketService ticketService;
 
   @GetMapping()
   public List<Reservation> getReservations() {
@@ -30,5 +35,15 @@ public class ReservationController {
   @PutMapping()
   public Reservation saveReservation(@RequestBody ReservationInput input) {
     return service.saveReservation(input);
+  }
+
+  @GetMapping("/{id}/ticket")
+  public ResponseEntity<byte[]> getTicket(
+      @PathVariable UUID id, @AuthenticationPrincipal UserPrincipal currentUser) {
+    byte[] pdf = ticketService.generateTicket(id, currentUser);
+    return ResponseEntity.ok()
+        .contentType(MediaType.APPLICATION_PDF)
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ticket-" + id + ".pdf")
+        .body(pdf);
   }
 }
